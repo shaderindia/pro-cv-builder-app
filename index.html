@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Builder | Create Professional Resumes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --primary-500: #3B82F6;
+            --primary-600: #2563eb;
+            --primary-700: #1d4ed8;
+            --primary-800: #1e40af;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --gray-900: #111827;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f3f4f6;
+            color: #111827;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background-color: #111827;
+            color: #f3f4f6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 20px;
+        }
+
+        .dark .header {
+            border-bottom-color: #374151;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-700);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-600);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-700);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-600);
+            color: var(--primary-600);
+        }
+
+        .dark .btn-outline {
+            color: white;
+            border-color: white;
+        }
+
+        .btn-outline:hover {
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .dark .btn-outline:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            justify-content: center;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 20px;
+            flex-direction: column;
+        }
+
+        @media (min-width: 1024px) {
+            .main-content {
+                flex-direction: row;
+            }
+        }
+
+        .form-section {
+            flex: 1;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .form-section {
+            background-color: #1f2937;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .preview-container {
+            width: 100%;
+            max-width: 210mm;
+            background-color: white;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .dark .preview-container {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .cv-preview {
+            width: 100%;
+            height: 297mm;
+            display: flex;
+            position: relative;
+        }
+
+        .modern-template {
+            display: flex;
+            height: 100%;
+        }
+
+        .modern-sidebar {
+            width: 33.33%;
+            background: linear-gradient(to bottom, var(--primary-500), var(--primary-800));
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .modern-main {
+            width: 66.66%;
+            padding: 30px;
+        }
+
+        .classic-template {
+            display: flex;
+            height: 100%;
+        }
+
+        .classic-sidebar {
+            width: 33.33%;
+            background: linear-gradient(to bottom, var(--gray-700), var(--gray-900));
+            padding: 30px 20px;
+            color: white;
+        }
+
+        .classic-main {
+            width: 66.66%;
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s ease;
+        }
+
+        .dark .form-control {
+            background-color: #374151;
+            border-color: #4b5563;
+            color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-500);
+        }
+
+        .form-section h2 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--primary-700);
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .dark .form-section h2 {
+            border-bottom-color: #374151;
+            color: var(--primary-500);
+        }
+
+        .image-upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .image-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e5e7eb;
+            overflow: hidden;
+            position: relative;
+            border: 3px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .image-preview {
+            background-color: #4b5563;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-btn {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-btn input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .cropper-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .cropper-wrapper {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cropper-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .cropper-zoom {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .cropper-zoom input {
+            width: 200px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-600);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .dark .section-title {
+            color: var(--primary-400);
+        }
+
+        .modern-sidebar .section-title,
+        .classic-sidebar .section-title {
+            color: white;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+
+        .personal-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .name {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .designation {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #e5e7eb;
+            margin-bottom: 15px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.875rem;
+        }
+
+        .contact-item i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+        }
+
+        .experience-item,
+        .education-item {
+            margin-bottom: 15px;
+        }
+
+        .job-title,
+        .education-title {
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+
+        .company,
+        .education-institution {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 3px;
+        }
+
+        .dark .company,
+        .dark .education-institution {
+            color: #d1d5db;
+        }
+
+        .duration {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .dark .duration {
+            color: #d1d5db;
+        }
+
+        .job-description {
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+
+        .objective-text {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-top: 5px;
+        }
+
+        .declaration {
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .dark .signature-section {
+            border-top-color: #374151;
+        }
+
+        .signature-field {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .signature-field label {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .dark .signature-field label {
+            color: #d1d5db;
+        }
+
+        .signature-value {
+            font-weight: 500;
+            min-height: 20px;
+        }
+
+        .signature-image {
+            height: 50px;
+            max-width: 150px;
+            object-fit: contain;
+        }
+
+        .add-more-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.875rem;
+            color: var(--primary-600);
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .dark .add-more-btn {
+            color: var(--primary-400);
+        }
+
+        .add-more-btn i {
+            font-size: 0.75rem;
+        }
+
+        .remove-btn {
+            color: #ef4444;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .template-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .template-option {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .dark .template-option {
+            border-color: #4b5563;
+        }
+
+        .template-option:hover {
+            border-color: var(--primary-500);
+        }
+
+        .template-option.active {
+            border-color: var(--primary-500);
+            background-color: rgba(59, 130, 246, 0.1);
+        }
+
+        .dark .template-option.active {
+            background-color: rgba(59, 130, 246, 0.2);
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #10b981;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 6px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 100;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background-color: #ef4444;
+        }
+
+        .toast.warning {
+            background-color: #f59e0b;
+        }
+
+        .preview-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            .preview-container, .preview-container * {
+                visibility: visible;
+            }
+            .preview-container {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                box-shadow: none;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .modern-template,
+            .classic-template {
+                flex-direction: column;
+            }
+            .modern-sidebar,
+            .classic-sidebar,
+            .modern-main,
+            .classic-main {
+                width: 100%;
+            }
+            .cv-preview {
+                height: auto;
+                min-height: 297mm;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CV Builder</h1>
+            <div class="header-actions">
+                <button id="themeToggle" class="btn btn-outline btn-icon">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="shareBtn" class="btn btn-outline btn-icon">
+                    <i class="fas fa-share-alt"></i>
+                </button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <section class="form-section">
+                <h2>Personal Information</h2>
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="John Doe">
+                </div>
+                <div class="form-group">
+                    <label for="jobTitle">Designation</label>
+                    <input type="text" id="jobTitle" class="form-control" placeholder="Software Engineer">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="john@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="+1 234 567 890">
+                </div>
+                <div class="form-group">
+                    <label for="address">Address</label>
+                    <input type="text" id="address" class="form-control" placeholder="123 Main St, City, Country">
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nationality</label>
+                    <input type="text" id="nationality" class="form-control" placeholder="American">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Date of Birth</label>
+                    <input type="date" id="dob" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" class="form-control">
+                        <option value="">Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <h2>Profile Picture</h2>
+                <div class="image-upload-container">
+                    <div class="image-preview">
+                        <img id="profileImagePreview" src="" alt="Profile Preview" style="display: none;">
+                    </div>
+                    <button class="btn btn-primary upload-btn">
+                        <i class="fas fa-upload"></i> Upload Image
+                        <input type="file" id="imageUpload" accept="image/*">
+                    </button>
+                </div>
+
+                <h2>Objective / Summary</h2>
+                <div class="form-group">
+                    <textarea id="objective" class="form-control" rows="5" placeholder="Brief summary about yourself and your career objectives..."></textarea>
+                </div>
+
+                <h2>Skills & Languages</h2>
+                <div class="form-group">
+                    <label for="skills">Skills (comma separated)</label>
+                    <input type="text" id="skills" class="form-control" placeholder="JavaScript, React, Python, Project Management">
+                </div>
+                <div class="form-group">
+                    <label for="languages">Languages (comma separated)</label>
+                    <input type="text" id="languages" class="form-control" placeholder="English, Spanish, French">
+                </div>
+
+                <h2>Work Experience</h2>
+                <div id="experienceContainer">
+                    <div class="experience-item">
+                        <div class="form-group">
+                            <label for="jobTitle1">Job Title</label>
+                            <input type="text" id="jobTitle1" class="form-control" placeholder="Senior Developer">
+                        </div>
+                        <div class="form-group">
+                            <label for="company1">Company</label>
+                            <input type="text" id="company1" class="form-control" placeholder="Tech Corp Inc.">
+                        </div>
+                        <div class="form-row" style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="startDate1">From</label>
+                                <input type="month" id="startDate1" class="form-control">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="endDate1">To</label>
+                                <input type="month" id="endDate1" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobDescription1">Description</label>
+                            <textarea id="jobDescription1" class="form-control" rows="3" placeholder="Describe your responsibilities and achievements..."></textarea>
+                        </div>
+                        <button class="remove-btn" onclick="removeExperience(this)">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                <button class="add-more-btn" onclick="addExperience()">
+                    <i class="fas fa-plus"></i> Add More Experience
+                </button>
+
+                <h2>Education & Training</h2>
+                <div id="educationContainer">
+                    <div class="education-item">
+                        <div class="form-group">
+                            <label for="course1">Course/Certification</label>
+                            <input type="text" id="course1" class="form-control" placeholder="Bachelor of Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label for="institution1">Institution</label>
+                            <input type="text" id="institution1" class="form-control" placeholder="University of Technology">
+                        </div>
+                        <div class="form-group">
+                            <label for="educationYear1">Year Completed</label>
+                            <input type="number" id="educationYear1" class="form-control" placeholder="2020" min="1900" max="2100">
+                        </div>
+                        <button class="remove-btn" onclick="removeEducation(this)">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+                <button class="add-more-btn" onclick="addEducation()">
+                    <i class="fas fa-plus"></i> Add More Education
+                </button>
+
+                <h2>Hobbies</h2>
+                <div class="form-group">
+                    <label for="hobbies">Hobbies (comma separated)</label>
+                    <input type="text" id="hobbies" class="form-control" placeholder="Photography, Hiking, Reading">
+                </div>
+
+                <h2>Declaration</h2>
+                <div class="form-group">
+                    <textarea id="declaration" class="form-control" rows="3">I hereby declare that all the information provided above is true to the best of my knowledge.</textarea>
+                </div>
+
+                <h2>Signature Section</h2>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="showSignature" checked> Show Signature Section
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label for="signatureDate">Date</label>
+                    <input type="date" id="signatureDate" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="signaturePlace">Place</label>
+                    <input type="text" id="signaturePlace" class="form-control" placeholder="City, Country">
+                </div>
+                <div class="form-group">
+                    <label for="signatureText">Signature (Text)</label>
+                    <input type="text" id="signatureText" class="form-control" placeholder="Your Name">
+                </div>
+                <div class="form-group">
+                    <label for="signatureImage">Signature (Image)</label>
+                    <input type="file" id="signatureImage" class="form-control" accept="image/*">
+                </div>
+
+                <h2>Template</h2>
+                <div class="template-selector">
+                    <div class="template-option active" data-template="modern">
+                        Modern Template
+                    </div>
+                    <div class="template-option" data-template="classic">
+                        Classic Template
+                    </div>
+                </div>
+            </section>
+
+            <section class="preview-section">
+                <div class="preview-container">
+                    <div id="cvPreview" class="cv-preview">
+                        <!-- Preview content will be generated here -->
+                    </div>
+                </div>
+                <div class="preview-actions">
+                    <button id="downloadPdf" class="btn btn-primary">
+                        <i class="fas fa-file-pdf"></i> Download PDF
+                    </button>
+                    <button id="downloadJpg" class="btn btn-primary">
+                        <i class="fas fa-file-image"></i> Download JPG
+                    </button>
+                    <button id="printBtn" class="btn btn-outline">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <div id="cropperModal" class="cropper-container" style="display: none;">
+            <div class="cropper-wrapper">
+                <img id="cropperImage" src="" style="max-width: 100%; max-height: 100%;">
+            </div>
+            <div class="cropper-zoom">
+                <i class="fas fa-search-minus"></i>
+                <input type="range" id="zoomSlider" min="1" max="3" step="0.1" value="1">
+                <i class="fas fa-search-plus"></i>
+            </div>
+            <div class="cropper-actions">
+                <button id="cancelCrop" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button id="applyCrop" class="btn btn-primary">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </div>
+        </div>
+
+        <div id="toast" class="toast">
+            <i class="fas fa-check-circle"></i>
+            <span id="toastMessage">Operation completed successfully</span>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const themeToggle = document.getElementById('themeToggle');
+        const shareBtn = document.getElementById('shareBtn');
+        const downloadPdf = document.getElementById('downloadPdf');
+        const downloadJpg = document.getElementById('downloadJpg');
+        const printBtn = document.getElementById('printBtn');
+        const cvPreview = document.getElementById('cvPreview');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toastMessage');
+        const templateOptions = document.querySelectorAll('.template-option');
+        
+        // Form elements
+        const formInputs = document.querySelectorAll('.form-control, textarea, select');
+        const imageUpload = document.getElementById('imageUpload');
+        const profileImagePreview = document.getElementById('profileImagePreview');
+        const cropperModal = document.getElementById('cropperModal');
+        const cropperImage = document.getElementById('cropperImage');
+        const zoomSlider = document.getElementById('zoomSlider');
+        const cancelCrop = document.getElementById('cancelCrop');
+        const applyCrop = document.getElementById('applyCrop');
+        const signatureImage = document.getElementById('signatureImage');
+
+        // State
+        let currentTemplate = 'modern';
+        let cropper;
+        let cropperZoom = 1;
+        let selectedImage = null;
+        let signatureImageData = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            updatePreview();
+            setupEventListeners();
+            checkThemePreference();
+        });
+
+        function setupEventListeners() {
+            // Theme toggle
+            themeToggle.addEventListener('click', toggleTheme);
+
+            // Share button
+            shareBtn.addEventListener('click', shareCV);
+
+            // Download buttons
+            downloadPdf.addEventListener('click', () => downloadCV('pdf'));
+            downloadJpg.addEventListener('click', () => downloadCV('jpg'));
+            printBtn.addEventListener('click', printCV);
+
+            // Form inputs
+            formInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    saveToLocalStorage();
+                    updatePreview();
+                });
+            });
+
+            // Image upload
+            imageUpload.addEventListener('change', handleImageUpload);
+
+            // Cropper actions
+            cancelCrop.addEventListener('click', cancelCropping);
+            applyCrop.addEventListener('click', applyCropping);
+            zoomSlider.addEventListener('input', updateCropperZoom);
+
+            // Template selection
+            templateOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    templateOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentTemplate = this.dataset.template;
+                    saveToLocalStorage();
+                    updatePreview();
+                });
+            });
+
+            // Signature image
+            signatureImage.addEventListener('change', handleSignatureUpload);
+
+            // Show signature checkbox
+            document.getElementById('showSignature').addEventListener('change', function() {
+                saveToLocalStorage();
+                updatePreview();
+            });
+
+            // Set current date as default for signature
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('signatureDate').value = today;
+        }
+
+        function checkThemePreference() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark');
+                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark);
+            themeToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        }
+
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.match('image.*')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                selectedImage = event.target.result;
+                openCropper(selectedImage);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openCropper(imageSrc) {
+            cropperImage.src = imageSrc;
+            cropperModal.style.display = 'flex';
+            
+            // Initialize cropper
+            cropper = new Cropper(cropperImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                autoCropArea: 0.8,
+                responsive: true,
+                guides: false,
+                zoomable: true,
+                zoomOnTouch: true,
+                zoomOnWheel: true,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        }
+
+        function updateCropperZoom() {
+            cropperZoom = parseFloat(zoomSlider.value);
+            cropper.zoomTo(cropperZoom);
+        }
+
+        function cancelCropping() {
+            cropperModal.style.display = 'none';
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            imageUpload.value = '';
+        }
+
+        function applyCropping() {
+            if (!cropper) return;
+
+            const canvas = cropper.getCroppedCanvas({
+                width: 500,
+                height: 500,
+                minWidth: 256,
+                minHeight: 256,
+                maxWidth: 2000,
+                maxHeight: 2000,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            const croppedImage = canvas.toDataURL('image/jpeg', 0.9);
+            profileImagePreview.src = croppedImage;
+            profileImagePreview.style.display = 'block';
+            
+            cropperModal.style.display = 'none';
+            cropper.destroy();
+            cropper = null;
+            
+            saveToLocalStorage();
+            updatePreview();
+            showToast('Profile picture updated');
+        }
+
+        function handleSignatureUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            if (!file.type.match('image.*')) {
+                showToast('Please select an image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                signatureImageData = event.target.result;
+                saveToLocalStorage();
+                updatePreview();
+                showToast('Signature image uploaded');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addExperience() {
+            const container = document.getElementById('experienceContainer');
+            const count = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'experience-item';
+            div.innerHTML = `
+                <div class="form-group">
+                    <label for="jobTitle${count}">Job Title</label>
+                    <input type="text" id="jobTitle${count}" class="form-control" placeholder="Senior Developer">
+                </div>
+                <div class="form-group">
+                    <label for="company${count}">Company</label>
+                    <input type="text" id="company${count}" class="form-control" placeholder="Tech Corp Inc.">
+                </div>
+                <div class="form-row" style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="startDate${count}">From</label>
+                        <input type="month" id="startDate${count}" class="form-control">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="endDate${count}">To</label>
+                        <input type="month" id="endDate${count}" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="jobDescription${count}">Description</label>
+                    <textarea id="jobDescription${count}" class="form-control" rows="3" placeholder="Describe your responsibilities and achievements..."></textarea>
+                </div>
+                <button class="remove-btn" onclick="removeExperience(this)">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            `;
+            
+            container.appendChild(div);
+            
+            // Add event listeners to new inputs
+            const inputs = div.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    saveToLocalStorage();
+                    updatePreview();
+                });
+            });
+            
+            saveToLocalStorage();
+            updatePreview();
+        }
+
+        function removeExperience(button) {
+            if (document.getElementById('experienceContainer').children.length <= 1) {
+                showToast('You need at least one experience entry', 'warning');
+                return;
+            }
+            
+            button.parentElement.remove();
+            saveToLocalStorage();
+            updatePreview();
+        }
+
+        function addEducation() {
+            const container = document.getElementById('educationContainer');
+            const count = container.children.length + 1;
+            
+            const div = document.createElement('div');
+            div.className = 'education-item';
+            div.innerHTML = `
+                <div class="form-group">
+                    <label for="course${count}">Course/Certification</label>
+                    <input type="text" id="course${count}" class="form-control" placeholder="Bachelor of Computer Science">
+                </div>
+                <div class="form-group">
+                    <label for="institution${count}">Institution</label>
+                    <input type="text" id="institution${count}" class="form-control" placeholder="University of Technology">
+                </div>
+                <div class="form-group">
+                    <label for="educationYear${count}">Year Completed</label>
+                    <input type="number" id="educationYear${count}" class="form-control" placeholder="2020" min="1900" max="2100">
+                </div>
+                <button class="remove-btn" onclick="removeEducation(this)">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            `;
+            
+            container.appendChild(div);
+            
+            // Add event listeners to new inputs
+            const inputs = div.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    saveToLocalStorage();
+                    updatePreview();
+                });
+            });
+            
+            saveToLocalStorage();
+            updatePreview();
+        }
+
+        function removeEducation(button) {
+            if (document.getElementById('educationContainer').children.length <= 1) {
+                showToast('You need at least one education entry', 'warning');
+                return;
+            }
+            
+            button.parentElement.remove();
+            saveToLocalStorage();
+            updatePreview();
+        }
+
+        function saveToLocalStorage() {
+            const formData = {
+                personalInfo: {
+                    fullName: document.getElementById('fullName').value,
+                    jobTitle: document.getElementById('jobTitle').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value,
+                    nationality: document.getElementById('nationality').value,
+                    dob: document.getElementById('dob').value,
+                    gender: document.getElementById('gender').value
+                },
+                profileImage: profileImagePreview.src || '',
+                objective: document.getElementById('objective').value,
+                skills: document.getElementById('skills').value,
+                languages: document.getElementById('languages').value,
+                hobbies: document.getElementById('hobbies').value,
+                declaration: document.getElementById('declaration').value,
+                showSignature: document.getElementById('showSignature').checked,
+                signatureDate: document.getElementById('signatureDate').value,
+                signaturePlace: document.getElementById('signaturePlace').value,
+                signatureText: document.getElementById('signatureText').value,
+                signatureImage: signatureImageData || '',
+                template: currentTemplate
+            };
+
+            // Save experiences
+            const experiences = [];
+            const experienceItems = document.getElementById('experienceContainer').children;
+            for (let i = 0; i < experienceItems.length; i++) {
+                experiences.push({
+                    jobTitle: document.getElementById(`jobTitle${i+1}`).value,
+                    company: document.getElementById(`company${i+1}`).value,
+                    startDate: document.getElementById(`startDate${i+1}`).value,
+                    endDate: document.getElementById(`endDate${i+1}`).value,
+                    description: document.getElementById(`jobDescription${i+1}`).value
+                });
+            }
+            formData.experiences = experiences;
+
+            // Save education
+            const education = [];
+            const educationItems = document.getElementById('educationContainer').children;
+            for (let i = 0; i < educationItems.length; i++) {
+                education.push({
+                    course: document.getElementById(`course${i+1}`).value,
+                    institution: document.getElementById(`institution${i+1}`).value,
+                    year: document.getElementById(`educationYear${i+1}`).value
+                });
+            }
+            formData.education = education;
+
+            localStorage.setItem('cvData', JSON.stringify(formData));
+        }
+
+        function loadFromLocalStorage() {
+            const savedData = localStorage.getItem('cvData');
+            if (!savedData) return;
+
+            const formData = JSON.parse(savedData);
+
+            // Load personal info
+            document.getElementById('fullName').value = formData.personalInfo.fullName || '';
+            document.getElementById('jobTitle').value = formData.personalInfo.jobTitle || '';
+            document.getElementById('email').value = formData.personalInfo.email || '';
+            document.getElementById('phone').value = formData.personalInfo.phone || '';
+            document.getElementById('address').value = formData.personalInfo.address || '';
+            document.getElementById('nationality').value = formData.personalInfo.nationality || '';
+            document.getElementById('dob').value = formData.personalInfo.dob || '';
+            document.getElementById('gender').value = formData.personalInfo.gender || '';
+
+            // Load profile image
+            if (formData.profileImage) {
+                profileImagePreview.src = formData.profileImage;
+                profileImagePreview.style.display = 'block';
+            }
+
+            // Load other fields
+            document.getElementById('objective').value = formData.objective || '';
+            document.getElementById('skills').value = formData.skills || '';
+            document.getElementById('languages').value = formData.languages || '';
+            document.getElementById('hobbies').value = formData.hobbies || '';
+            document.getElementById('declaration').value = formData.declaration || '';
+            document.getElementById('showSignature').checked = formData.showSignature !== false;
+            document.getElementById('signatureDate').value = formData.signatureDate || '';
+            document.getElementById('signaturePlace').value = formData.signaturePlace || '';
+            document.getElementById('signatureText').value = formData.signatureText || '';
+            signatureImageData = formData.signatureImage || null;
+
+            // Load template
+            currentTemplate = formData.template || 'modern';
+            templateOptions.forEach(option => {
+                option.classList.toggle('active', option.dataset.template === currentTemplate);
+            });
+
+            // Load experiences
+            const experienceContainer = document.getElementById('experienceContainer');
+            experienceContainer.innerHTML = '';
+            
+            if (formData.experiences && formData.experiences.length > 0) {
+                formData.experiences.forEach((exp, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'experience-item';
+                    div.innerHTML = `
+                        <div class="form-group">
+                            <label for="jobTitle${i+1}">Job Title</label>
+                            <input type="text" id="jobTitle${i+1}" class="form-control" value="${exp.jobTitle || ''}" placeholder="Senior Developer">
+                        </div>
+                        <div class="form-group">
+                            <label for="company${i+1}">Company</label>
+                            <input type="text" id="company${i+1}" class="form-control" value="${exp.company || ''}" placeholder="Tech Corp Inc.">
+                        </div>
+                        <div class="form-row" style="display: flex; gap: 10px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label for="startDate${i+1}">From</label>
+                                <input type="month" id="startDate${i+1}" class="form-control" value="${exp.startDate || ''}">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label for="endDate${i+1}">To</label>
+                                <input type="month" id="endDate${i+1}" class="form-control" value="${exp.endDate || ''}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="jobDescription${i+1}">Description</label>
+                            <textarea id="jobDescription${i+1}" class="form-control" rows="3" placeholder="Describe your responsibilities and achievements...">${exp.description || ''}</textarea>
+                        </div>
+                        <button class="remove-btn" onclick="removeExperience(this)">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    `;
+                    experienceContainer.appendChild(div);
+                });
+            } else {
+                // Add default experience field if none exists
+                addExperience();
+            }
+
+            // Load education
+            const educationContainer = document.getElementById('educationContainer');
+            educationContainer.innerHTML = '';
+            
+            if (formData.education && formData.education.length > 0) {
+                formData.education.forEach((edu, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'education-item';
+                    div.innerHTML = `
+                        <div class="form-group">
+                            <label for="course${i+1}">Course/Certification</label>
+                            <input type="text" id="course${i+1}" class="form-control" value="${edu.course || ''}" placeholder="Bachelor of Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label for="institution${i+1}">Institution</label>
+                            <input type="text" id="institution${i+1}" class="form-control" value="${edu.institution || ''}" placeholder="University of Technology">
+                        </div>
+                        <div class="form-group">
+                            <label for="educationYear${i+1}">Year Completed</label>
+                            <input type="number" id="educationYear${i+1}" class="form-control" value="${edu.year || ''}" placeholder="2020" min="1900" max="2100">
+                        </div>
+                        <button class="remove-btn" onclick="removeEducation(this)">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    `;
+                    educationContainer.appendChild(div);
+                });
+            } else {
+                // Add default education field if none exists
+                addEducation();
+            }
+
+            // Add event listeners to all inputs
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    saveToLocalStorage();
+                    updatePreview();
+                });
+            });
+        }
+
+        function updatePreview() {
+            const formData = JSON.parse(localStorage.getItem('cvData')) || {};
+            
+            if (currentTemplate === 'modern') {
+                cvPreview.innerHTML = `
+                    <div class="modern-template">
+                        <div class="modern-sidebar">
+                            ${formData.profileImage ? `<div class="image-preview" style="width: 120px; height: 120px; margin: 0 auto 20px;">
+                                <img src="${formData.profileImage}" alt="Profile" style="display: block;">
+                            </div>` : ''}
+                            
+                            <div class="personal-info">
+                                <h1 class="name">${formData.personalInfo.fullName || 'Your Name'}</h1>
+                                <p class="designation">${formData.personalInfo.jobTitle || 'Your Profession'}</p>
+                                
+                                <div class="contact-info">
+                                    ${formData.personalInfo.email ? `<div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>${formData.personalInfo.email}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.phone ? `<div class="contact-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>${formData.personalInfo.phone}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.address ? `<div class="contact-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>${formData.personalInfo.address}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.nationality ? `<div class="contact-item">
+                                        <i class="fas fa-globe"></i>
+                                        <span>${formData.personalInfo.nationality}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.dob ? `<div class="contact-item">
+                                        <i class="fas fa-birthday-cake"></i>
+                                        <span>${new Date(formData.personalInfo.dob).toLocaleDateString()}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.gender ? `<div class="contact-item">
+                                        <i class="fas fa-${formData.personalInfo.gender.toLowerCase() === 'male' ? 'male' : 'female'}"></i>
+                                        <span>${formData.personalInfo.gender}</span>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                            
+                            ${formData.skills ? `<div class="skills-section">
+                                <h3 class="section-title">Skills</h3>
+                                <div class="skills-list">
+                                    ${formData.skills.split(',').map(skill => `
+                                        <div class="skill-tag">${skill.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                            
+                            ${formData.languages ? `<div class="skills-section">
+                                <h3 class="section-title">Languages</h3>
+                                <div class="skills-list">
+                                    ${formData.languages.split(',').map(lang => `
+                                        <div class="skill-tag">${lang.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                            
+                            ${formData.hobbies ? `<div class="skills-section">
+                                <h3 class="section-title">Hobbies</h3>
+                                <div class="skills-list">
+                                    ${formData.hobbies.split(',').map(hobby => `
+                                        <div class="skill-tag">${hobby.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                        </div>
+                        
+                        <div class="modern-main">
+                            ${formData.objective ? `<div class="section">
+                                <h3 class="section-title">Objective</h3>
+                                <p class="objective-text">${formData.objective}</p>
+                            </div>` : ''}
+                            
+                            ${formData.experiences && formData.experiences.length > 0 ? `<div class="section">
+                                <h3 class="section-title">Work Experience</h3>
+                                ${formData.experiences.map(exp => `
+                                    <div class="experience-item">
+                                        <h4 class="job-title">${exp.jobTitle || 'Job Title'}</h4>
+                                        <p class="company">${exp.company || 'Company Name'}</p>
+                                        ${exp.startDate || exp.endDate ? `<p class="duration">
+                                            ${exp.startDate ? new Date(exp.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : ''}
+                                            ${exp.startDate && exp.endDate ? ' - ' : ''}
+                                            ${exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : ''}
+                                        </p>` : ''}
+                                        ${exp.description ? `<p class="job-description">${exp.description.replace(/\n/g, '<br>')}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>` : ''}
+                            
+                            ${formData.education && formData.education.length > 0 ? `<div class="section">
+                                <h3 class="section-title">Education</h3>
+                                ${formData.education.map(edu => `
+                                    <div class="education-item">
+                                        <h4 class="education-title">${edu.course || 'Course Name'}</h4>
+                                        <p class="education-institution">${edu.institution || 'Institution Name'}</p>
+                                        ${edu.year ? `<p class="duration">${edu.year}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>` : ''}
+                            
+                            ${formData.declaration ? `<div class="section">
+                                <h3 class="section-title">Declaration</h3>
+                                <p class="declaration">${formData.declaration}</p>
+                            </div>` : ''}
+                            
+                            ${formData.showSignature ? `<div class="signature-section">
+                                <div class="signature-field">
+                                    <label>Date</label>
+                                    <div class="signature-value">${formData.signatureDate || ''}</div>
+                                </div>
+                                <div class="signature-field">
+                                    <label>Place</label>
+                                    <div class="signature-value">${formData.signaturePlace || ''}</div>
+                                </div>
+                                <div class="signature-field">
+                                    <label>Signature</label>
+                                    ${formData.signatureImage ? `<img src="${formData.signatureImage}" class="signature-image" alt="Signature">` : `<div class="signature-value">${formData.signatureText || ''}</div>`}
+                                </div>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Classic template
+                cvPreview.innerHTML = `
+                    <div class="classic-template">
+                        <div class="classic-sidebar">
+                            ${formData.profileImage ? `<div class="image-preview" style="width: 120px; height: 120px; margin: 0 auto 20px;">
+                                <img src="${formData.profileImage}" alt="Profile" style="display: block;">
+                            </div>` : ''}
+                            
+                            <div class="personal-info">
+                                <h1 class="name">${formData.personalInfo.fullName || 'Your Name'}</h1>
+                                <p class="designation">${formData.personalInfo.jobTitle || 'Your Profession'}</p>
+                                
+                                <div class="contact-info">
+                                    ${formData.personalInfo.email ? `<div class="contact-item">
+                                        <i class="fas fa-envelope"></i>
+                                        <span>${formData.personalInfo.email}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.phone ? `<div class="contact-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>${formData.personalInfo.phone}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.address ? `<div class="contact-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>${formData.personalInfo.address}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.nationality ? `<div class="contact-item">
+                                        <i class="fas fa-globe"></i>
+                                        <span>${formData.personalInfo.nationality}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.dob ? `<div class="contact-item">
+                                        <i class="fas fa-birthday-cake"></i>
+                                        <span>${new Date(formData.personalInfo.dob).toLocaleDateString()}</span>
+                                    </div>` : ''}
+                                    
+                                    ${formData.personalInfo.gender ? `<div class="contact-item">
+                                        <i class="fas fa-${formData.personalInfo.gender.toLowerCase() === 'male' ? 'male' : 'female'}"></i>
+                                        <span>${formData.personalInfo.gender}</span>
+                                    </div>` : ''}
+                                </div>
+                            </div>
+                            
+                            ${formData.skills ? `<div class="skills-section">
+                                <h3 class="section-title">Skills</h3>
+                                <div class="skills-list">
+                                    ${formData.skills.split(',').map(skill => `
+                                        <div class="skill-tag">${skill.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                            
+                            ${formData.languages ? `<div class="skills-section">
+                                <h3 class="section-title">Languages</h3>
+                                <div class="skills-list">
+                                    ${formData.languages.split(',').map(lang => `
+                                        <div class="skill-tag">${lang.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                            
+                            ${formData.hobbies ? `<div class="skills-section">
+                                <h3 class="section-title">Hobbies</h3>
+                                <div class="skills-list">
+                                    ${formData.hobbies.split(',').map(hobby => `
+                                        <div class="skill-tag">${hobby.trim()}</div>
+                                    `).join('')}
+                                </div>
+                            </div>` : ''}
+                        </div>
+                        
+                        <div class="classic-main">
+                            ${formData.objective ? `<div class="section">
+                                <h3 class="section-title">Objective</h3>
+                                <p class="objective-text">${formData.objective}</p>
+                            </div>` : ''}
+                            
+                            ${formData.experiences && formData.experiences.length > 0 ? `<div class="section">
+                                <h3 class="section-title">Work Experience</h3>
+                                ${formData.experiences.map(exp => `
+                                    <div class="experience-item">
+                                        <h4 class="job-title">${exp.jobTitle || 'Job Title'}</h4>
+                                        <p class="company">${exp.company || 'Company Name'}</p>
+                                        ${exp.startDate || exp.endDate ? `<p class="duration">
+                                            ${exp.startDate ? new Date(exp.startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : ''}
+                                            ${exp.startDate && exp.endDate ? ' - ' : ''}
+                                            ${exp.endDate ? new Date(exp.endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : ''}
+                                        </p>` : ''}
+                                        ${exp.description ? `<p class="job-description">${exp.description.replace(/\n/g, '<br>')}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>` : ''}
+                            
+                            ${formData.education && formData.education.length > 0 ? `<div class="section">
+                                <h3 class="section-title">Education</h3>
+                                ${formData.education.map(edu => `
+                                    <div class="education-item">
+                                        <h4 class="education-title">${edu.course || 'Course Name'}</h4>
+                                        <p class="education-institution">${edu.institution || 'Institution Name'}</p>
+                                        ${edu.year ? `<p class="duration">${edu.year}</p>` : ''}
+                                    </div>
+                                `).join('')}
+                            </div>` : ''}
+                            
+                            ${formData.declaration ? `<div class="section">
+                                <h3 class="section-title">Declaration</h3>
+                                <p class="declaration">${formData.declaration}</p>
+                            </div>` : ''}
+                            
+                            ${formData.showSignature ? `<div class="signature-section">
+                                <div class="signature-field">
+                                    <label>Date</label>
+                                    <div class="signature-value">${formData.signatureDate || ''}</div>
+                                </div>
+                                <div class="signature-field">
+                                    <label>Place</label>
+                                    <div class="signature-value">${formData.signaturePlace || ''}</div>
+                                </div>
+                                <div class="signature-field">
+                                    <label>Signature</label>
+                                    ${formData.signatureImage ? `<img src="${formData.signatureImage}" class="signature-image" alt="Signature">` : `<div class="signature-value">${formData.signatureText || ''}</div>`}
+                                </div>
+                            </div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function downloadCV(format) {
+            const element = document.getElementById('cvPreview');
+            const opt = {
+                margin: 10,
+                filename: 'my-cv.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            if (format === 'pdf') {
+                html2pdf().from(element).set(opt).save();
+                showToast('PDF downloaded successfully');
+            } else if (format === 'jpg') {
+                html2pdf().from(element).set(opt).toImg().then(function(img) {
+                    const link = document.createElement('a');
+                    link.href = img.src;
+                    link.download = 'my-cv.jpg';
+                    link.click();
+                    showToast('JPG downloaded successfully');
+                });
+            }
+        }
+
+        function printCV() {
+            window.print();
+        }
+
+        function shareCV() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Professional CV',
+                    text: 'Check out my professional CV created with CV Builder',
+                    url: window.location.href
+                }).then(() => {
+                    showToast('Shared successfully');
+                }).catch(err => {
+                    showToast('Error sharing: ' + err, 'error');
+                });
+            } else {
+                // Fallback for browsers that don't support Web Share API
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    showToast('Link copied to clipboard');
+                }).catch(err => {
+                    showToast('Failed to copy link: ' + err, 'error');
+                });
+            }
+        }
+
+        function showToast(message, type = 'success') {
+            toastMessage.textContent = message;
+            toast.className = 'toast';
+            toast.classList.add(type);
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Make functions available globally for inline event handlers
+        window.addExperience = addExperience;
+        window.removeExperience = removeExperience;
+        window.addEducation = addEducation;
+        window.removeEducation = removeEducation;
+    </script>
+    <!-- Include Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+</body>
+</html>
